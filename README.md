@@ -1,1 +1,1 @@
-# DESLEXIA-using-CNN-and-SVM
+# DYSLEXIA-using-CNN-and-SVM
