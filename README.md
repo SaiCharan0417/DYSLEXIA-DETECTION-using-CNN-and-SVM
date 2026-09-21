@@ -1,1 +1,2 @@
-# DYSLEXIA-using-CNN-and-SVM
+# DYSLEXIA-DETECTION-using-CNN-and-SVM
+# 
