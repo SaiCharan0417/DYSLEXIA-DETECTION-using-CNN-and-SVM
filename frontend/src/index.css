@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+:root {
   --color-surface: #f8f9ff;
   --color-surface-dim: #cbdbf5;
   --color-surface-bright: #f8f9ff;
@@ -37,6 +37,89 @@
   --color-on-error: #ffffff;
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
+}
+
+.dark {
+  /* Option 2: True Charcoal / Monochrome with Enhanced WCAG AAA Contrast */
+  --color-surface: #0f0f11;
+  --color-surface-dim: #141416;
+  --color-surface-bright: #1c1c1f;
+  --color-surface-container-lowest: #18181b;
+  --color-surface-container-low: #202024;
+  --color-surface-container: #27272a;
+  --color-surface-container-high: #2f2f34;
+  --color-surface-container-highest: #38383e;
+
+  /* Typography: High-contrast primary & brightened secondary/muted text */
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: #d4d4d8; /* Zinc-300: High readability on #18181b */
+  --color-inverse-surface: #ffffff;
+  --color-inverse-on-surface: #09090b;
+
+  /* Outlines: Lifted from dark gray to visible zinc */
+  --color-outline: #a1a1aa;          /* Zinc-400: Clear for muted captions & icons */
+  --color-outline-variant: #3f3f46;  /* Zinc-700: Crisp visible borders */
+  --color-surface-tint: #2dd4bf;
+
+  --color-primary: #ffffff;
+  --color-on-primary: #09090b;
+  --color-primary-container: #27272a;
+  --color-on-primary-container: #ffffff;
+  --color-inverse-primary: #e4e4e7;
+
+  --color-secondary: #2dd4bf;        /* Bright teal for dark canvas */
+  --color-on-secondary: #042f2e;
+  --color-secondary-container: #134e4a;
+  --color-on-secondary-container: #ccfbf1;
+
+  --color-tertiary: #d4d4d8;
+  --color-on-tertiary: #09090b;
+  --color-tertiary-container: #27272a;
+  --color-on-tertiary-container: #fafafa;
+
+  --color-error: #fb7185;
+  --color-on-error: #ffffff;
+  --color-error-container: #4c0519;
+  --color-on-error-container: #fecdd3;
+}
+
+@theme {
+  --color-surface: var(--color-surface);
+  --color-surface-dim: var(--color-surface-dim);
+  --color-surface-bright: var(--color-surface-bright);
+  --color-surface-container-lowest: var(--color-surface-container-lowest);
+  --color-surface-container-low: var(--color-surface-container-low);
+  --color-surface-container: var(--color-surface-container);
+  --color-surface-container-high: var(--color-surface-container-high);
+  --color-surface-container-highest: var(--color-surface-container-highest);
+  --color-on-surface: var(--color-on-surface);
+  --color-on-surface-variant: var(--color-on-surface-variant);
+  --color-inverse-surface: var(--color-inverse-surface);
+  --color-inverse-on-surface: var(--color-inverse-on-surface);
+  --color-outline: var(--color-outline);
+  --color-outline-variant: var(--color-outline-variant);
+  --color-surface-tint: var(--color-surface-tint);
+
+  --color-primary: var(--color-primary);
+  --color-on-primary: var(--color-on-primary);
+  --color-primary-container: var(--color-primary-container);
+  --color-on-primary-container: var(--color-on-primary-container);
+  --color-inverse-primary: var(--color-inverse-primary);
+
+  --color-secondary: var(--color-secondary);
+  --color-on-secondary: var(--color-on-secondary);
+  --color-secondary-container: var(--color-secondary-container);
+  --color-on-secondary-container: var(--color-on-secondary-container);
+
+  --color-tertiary: var(--color-tertiary);
+  --color-on-tertiary: var(--color-on-tertiary);
+  --color-tertiary-container: var(--color-tertiary-container);
+  --color-on-tertiary-container: var(--color-on-tertiary-container);
+
+  --color-error: var(--color-error);
+  --color-on-error: var(--color-on-error);
+  --color-error-container: var(--color-error-container);
+  --color-on-error-container: var(--color-on-error-container);
 
   --font-sans: 'Geist', sans-serif;
   --font-display: 'Geist', sans-serif;
@@ -56,5 +139,6 @@
   html, body {
     @apply m-0 p-0 text-on-surface bg-surface font-body;
     overscroll-behavior: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }

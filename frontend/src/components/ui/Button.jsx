@@ -1,17 +1,20 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { cn } from '../../utils/cn';
 
-export function Button({ 
-  children, 
-  variant = 'primary', 
-  size = 'md', 
-  className, 
-  isLoading, 
+export function Button({
+  children,
+  variant = 'primary',
+  size = 'md',
+  className,
+  isLoading,
   icon: Icon,
-  ...props 
+  ...props
 }) {
-  const baseStyles = "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all shadow-sm active:scale-[0.99] disabled:opacity-70 disabled:pointer-events-none";
-  
+  const shouldReduceMotion = useReducedMotion();
+
+  const baseStyles = "inline-flex items-center justify-center gap-2 rounded-lg font-medium shadow-sm disabled:opacity-70 disabled:pointer-events-none cursor-pointer select-none transition-colors duration-150";
+
   const variants = {
     primary: "bg-primary text-on-primary hover:bg-primary-container",
     secondary: "bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low",
@@ -26,8 +29,11 @@ export function Button({
   };
 
   return (
-    <button 
-      className={cn(baseStyles, variants[variant], sizes[size], className)} 
+    <motion.button
+      whileHover={shouldReduceMotion ? {} : { transform: "translateY(-1px)" }}
+      whileTap={shouldReduceMotion ? {} : { transform: "scale(0.98)" }}
+      transition={{ duration: 0.12, ease: [0.23, 1, 0.32, 1] }}
+      className={cn(baseStyles, variants[variant], sizes[size], className)}
       disabled={isLoading || props.disabled}
       {...props}
     >
@@ -39,6 +45,6 @@ export function Button({
       )}
       {!isLoading && Icon && <Icon size={18} />}
       {children}
-    </button>
+    </motion.button>
   );
 }
