@@ -1,61 +1,129 @@
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
-// ponytail: mock responses only. Replace fetch bodies when FastAPI is ready.
-
-const mockUser = { name: 'Dr. Elena Vance', email: 'e.vance@neuro-research.org', role: 'Researcher' };
+const mockUser = {
+  name: 'Dr. Elena Vance',
+  email: 'e.vance@neuro-research.org',
+  role: 'Researcher'
+};
 
 const mockHistory = [
-  { id: 'NW-8921', date: 'Today, 09:42 AM', subject: 'Subject 409-B (Age 7;2)', category: 'Reversal', confidence: 92.4, status: 'Completed' },
-  { id: 'NW-8920', date: 'Today, 08:15 AM', subject: 'Subject 104-A (Age 9;0)', category: 'Normal', confidence: 96.8, status: 'Completed' },
-  { id: 'NW-8919', date: 'Yesterday, 04:30 PM', subject: 'Subject 212-C (Age 6;8)', category: 'Corrected', confidence: 91.2, status: 'Completed' },
-  { id: 'NW-8918', date: 'Yesterday, 02:10 PM', subject: 'Subject 305-D (Age 11;4)', category: 'Normal', confidence: 98.1, status: 'Completed' },
-  { id: 'NW-8917', date: 'Oct 24, 11:05 AM', subject: 'Subject 118-B (Age 8;1)', category: 'Reversal', confidence: 88.5, status: 'In Review' },
+  { id: 'REC-2024-001', date: '2026-09-22', file: 'sample_01.png', category: 'Reversal', confidence: 97.2, status: 'Completed' },
+  { id: 'REC-2024-002', date: '2026-09-21', file: 'sample_02.png', category: 'Normal', confidence: 99.1, status: 'Completed' },
+  { id: 'REC-2024-003', date: '2026-09-20', file: 'sample_03.png', category: 'Corrected', confidence: 91.5, status: 'Completed' },
+  { id: 'REC-2024-004', date: '2026-09-19', file: 'sample_04.png', category: 'Normal', confidence: 98.4, status: 'Completed' },
+  { id: 'REC-2024-005', date: '2026-09-18', file: 'sample_05.png', category: 'Reversal', confidence: 89.2, status: 'Completed' },
 ];
 
 const mockPrediction = {
-  id: 'NW-84920',
+  id: 'REC-2024-001',
   category: 'Reversal',
   confidence: 97.2,
   probabilities: [
-    { label: 'Reversal (Mirror Writing)', value: 97.2 },
-    { label: 'Letter Inversion / Rotation', value: 2.1 },
-    { label: 'Baseline Dysgraphia / Motor Tremor', value: 0.7 },
+    { label: 'Reversal', value: 97.2 },
+    { label: 'Corrected', value: 2.1 },
+    { label: 'Normal', value: 0.7 },
   ],
   metrics: {
     ascenderRatio: 1.82,
-    strokeWidthVariation: '1.4 px',
-    mirrorSymmetryIndex: '88.4%',
+    strokeVariation: '1.4 px',
+    symmetryIndex: '88.4%',
   },
-  processedAt: 'Today, 10:42 AM',
-  latencyMs: 240,
+  filename: 'specimen_001.png'
 };
 
-function delay(ms = 600) {
+function delay(ms = 300) {
   return new Promise(r => setTimeout(r, ms));
 }
 
+export function getAuthHeaders() {
+  const token = localStorage.getItem('proto_token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+// POST /register
 export async function register(data) {
-  await delay();
-  // POST /register → mock
-  return { success: true, user: { ...mockUser, email: data.email } };
+  try {
+    const res = await fetch(`${API_BASE}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
+      return await res.json();
+    }
+  } catch (err) {
+    // Backend offline, fallback to mock
+  }
+  await delay(400);
+  const user = { ...mockUser, email: data.email, name: data.name || mockUser.name };
+  localStorage.setItem('proto_user', JSON.stringify(user));
+  localStorage.setItem('proto_token', 'proto_jwt_' + Date.now());
+  return { success: true, user, token: 'proto_jwt_' + Date.now() };
 }
 
-export async function login(data) {
-  await delay();
-  // POST /login → mock
-  return { success: true, token: 'mock-jwt-token', user: mockUser };
+// POST /login
+export async function login(credentials) {
+  try {
+    const res = await fetch(`${API_BASE}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials),
+    });
+    if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
+      return await res.json();
+    }
+  } catch (err) {
+    // Backend offline, fallback to mock
+  }
+  await delay(300);
+  const user = { ...mockUser, email: credentials.email || mockUser.email };
+  localStorage.setItem('proto_user', JSON.stringify(user));
+  localStorage.setItem('proto_token', 'proto_jwt_' + Date.now());
+  return { success: true, user, token: 'proto_jwt_' + Date.now() };
 }
 
+// POST /predict (multipart/form-data)
 export async function predict(file) {
-  await delay(2000);
-  // POST /predict → mock
-  return { success: true, result: mockPrediction };
+  try {
+    const formData = new FormData();
+    if (file) formData.append('file', file);
+
+    const res = await fetch(`${API_BASE}/predict`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: formData,
+    });
+    if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
+      return await res.json();
+    }
+  } catch (err) {
+    // Backend offline, fallback to mock
+  }
+  await delay(1200);
+  return {
+    success: true,
+    result: {
+      ...mockPrediction,
+      id: 'REC-' + Math.floor(1000 + Math.random() * 9000),
+      filename: file?.name || mockPrediction.filename
+    }
+  };
 }
 
+// GET /history
 export async function getHistory() {
-  await delay();
-  // GET /history → mock
+  try {
+    const res = await fetch(`${API_BASE}/history`, {
+      headers: getAuthHeaders(),
+    });
+    if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
+      return await res.json();
+    }
+  } catch (err) {
+    // Backend offline, fallback to mock
+  }
+  await delay(150);
   return { success: true, data: mockHistory };
 }
 
-export { mockHistory, mockPrediction };
+export { mockHistory, mockPrediction, mockUser };

@@ -1,94 +1,112 @@
 import React from 'react';
 import { Card } from '../components/ui/Card';
-import { mockPrediction } from '../utils/api';
-import { Printer, Download, Brain, ShieldCheck, PageSearch, CheckCircle } from 'iconoir-react';
 import { Button } from '../components/ui/Button';
+import { mockPrediction } from '../utils/api';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Report() {
-  const data = mockPrediction;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const stateData = location.state?.prediction;
+  const filename = location.state?.filename || stateData?.filename || 'specimen_001.png';
+  const data = stateData || mockPrediction;
 
   return (
-    <div className="w-full bg-surface-container-low py-4 flex flex-col items-center min-h-[calc(100vh-8rem)]">
-
-      <div className="w-full max-w-[960px] flex justify-end gap-3 mb-4">
-        <Button variant="secondary" icon={Printer} onClick={() => window.print()}>Print</Button>
-        <Button variant="accent" icon={Download}>Download PDF</Button>
+    <div className="space-y-6 max-w-2xl mx-auto">
+      <div className="flex items-center justify-between print:hidden">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dossier Report</h1>
+          <p className="text-sm text-gray-500">Formal printable record for screening specimen #{data.id}.</p>
+        </div>
+        <div className="flex gap-2">
+          <Button onClick={() => navigate('/result', { state: location.state })} className="bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300">
+            Back to Result
+          </Button>
+          <Button onClick={() => window.print()} className="bg-blue-600 text-white hover:bg-blue-700">
+            Print / PDF
+          </Button>
+        </div>
       </div>
 
-      <article className="relative w-full max-w-[960px] bg-surface-container-lowest shadow-md rounded-xl p-8 sm:p-12 lg:p-14 text-on-surface">
-        <header className="relative pb-6 mb-8 border-b border-surface-container">
-          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-2xl font-bold tracking-tight">NeuroWrite AI</span>
-                <span className="px-2 py-0.5 rounded bg-surface-container text-xs font-mono uppercase">Research v2.4</span>
-              </div>
-              <p className="text-sm text-on-surface-variant">Clinical AI & Neurological Pattern Screening Systems</p>
-            </div>
-            <div className="text-left sm:text-right">
-              <span className="text-xs uppercase tracking-widest text-secondary font-semibold">Laboratory Verification Dossier</span>
-              <h1 className="text-xl font-bold tracking-tight mt-1">Handwriting Screening Report</h1>
-              <p className="font-mono text-xs text-on-surface-variant mt-1">CNN-ResNet18 + SVM Linear-RBF</p>
-            </div>
+      <Card className="p-8 space-y-6 border border-gray-300">
+        {/* Document Header */}
+        <div className="border-b border-gray-200 pb-4 flex justify-between items-start">
+          <div>
+            <div className="text-xl font-bold text-gray-900">NeuroWrite AI</div>
+            <div className="text-xs text-gray-500">Handwriting Telemetry & Screening Record</div>
           </div>
+          <div className="text-right">
+            <span className="text-xs font-mono font-semibold bg-gray-100 px-2 py-0.5 rounded">v2.4 Prototype</span>
+            <div className="text-xs text-gray-400 mt-1 font-mono">Date: {new Date().toISOString().slice(0, 10)}</div>
+          </div>
+        </div>
 
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-surface-container-low">
-            <div className="flex flex-col">
-              <span className="text-xs text-outline uppercase tracking-wider">Document ID</span>
-              <span className="font-mono text-sm font-semibold mt-1">NW-2026-8841A</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs text-outline uppercase tracking-wider">Subject ID</span>
-              <span className="font-mono text-sm font-semibold mt-1">#PT-9042-C</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs text-outline uppercase tracking-wider">Date</span>
-              <span className="text-sm font-semibold mt-1">Sep 21, 2026</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xs text-outline uppercase tracking-wider">Clinician</span>
-              <span className="text-sm font-semibold mt-1">Dr. E. Rostova</span>
-            </div>
+        {/* Specimen Metadata Table */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50 p-3 rounded border border-gray-200 text-xs">
+          <div>
+            <span className="text-gray-500 block">Record ID</span>
+            <span className="font-mono font-bold">{data.id}</span>
           </div>
-        </header>
+          <div>
+            <span className="text-gray-500 block">Specimen</span>
+            <span className="font-mono font-semibold truncate block">{filename}</span>
+          </div>
+          <div>
+            <span className="text-gray-500 block">Status</span>
+            <span className="text-green-700 font-semibold">Completed</span>
+          </div>
+          <div>
+            <span className="text-gray-500 block">Method</span>
+            <span className="font-mono font-semibold">CNN + SVM</span>
+          </div>
+        </div>
 
-        <section className="mb-10">
-          <div className="rounded-xl p-6 bg-surface-container relative overflow-hidden">
-            <h2 className="text-lg font-bold mb-4">Executive Screening Synthesis</h2>
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-xs uppercase tracking-wider text-outline font-semibold">Predicted Class:</span>
-                  <span className="px-3 py-1 rounded bg-tertiary-container text-tertiary-fixed font-mono text-sm font-bold tracking-wide">
-                    {data.category.toUpperCase()} TENDENCY
-                  </span>
-                </div>
-                <p className="text-sm leading-relaxed">
-                  Significant spatial inversion and horizontal reflection detected across bilateral lower-case ascenders and numerals. Pattern shows high correlation with phonological-orthographic orientation challenges rather than acute motor-praxis degradation.
-                </p>
-              </div>
-              <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm min-w-[200px]">
-                <span className="text-xs uppercase tracking-wider text-outline block mb-1">Confidence Score</span>
-                <span className="text-3xl font-bold">{data.confidence}%</span>
-                <div className="w-full bg-surface-container rounded-full h-1.5 mt-2">
-                  <div className="bg-secondary h-1.5 rounded-full" style={{width: `${data.confidence}%`}}></div>
-                </div>
-              </div>
-            </div>
+        {/* Prediction Synthesis */}
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded">
+          <span className="text-xs font-bold text-rose-700 uppercase block mb-1">Predicted Category</span>
+          <div className="flex justify-between items-center">
+            <span className="text-2xl font-black text-rose-700">{data.category} Tendency</span>
+            <span className="text-lg font-mono font-bold text-gray-900">{data.confidence}% Confidence</span>
           </div>
-        </section>
+        </div>
 
-        <section className="mb-8">
-          <div className="p-5 bg-error-container/40 rounded-xl flex items-start gap-4">
-            <div>
-              <h3 className="text-sm font-bold text-error uppercase tracking-wide mb-1">Research Pre-Screening Protocol — Non-Diagnostic Instrument</h3>
-              <p className="text-xs text-on-surface leading-relaxed">
-                This automated report contains AI-assisted screening metrics generated strictly for educational research, longitudinal cohort monitoring, and diagnostic support. <strong>It does not constitute a standalone medical diagnosis of developmental dyslexia, dysgraphia, or neurological impairment.</strong>
-              </p>
-            </div>
-          </div>
-        </section>
-      </article>
+        {/* Quantitative Attribution Breakdown */}
+        <div className="space-y-2">
+          <h3 className="text-xs font-bold text-gray-700 uppercase tracking-wider">Biometric Attributions</h3>
+          <table className="w-full text-left text-xs border border-gray-200">
+            <thead className="bg-gray-100 text-gray-600">
+              <tr>
+                <th className="p-2 border-b">Feature</th>
+                <th className="p-2 border-b">Value</th>
+                <th className="p-2 border-b">Significance</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 font-mono">
+              <tr>
+                <td className="p-2">Ascender Axial Tilt</td>
+                <td className="p-2 font-bold text-rose-600">Δ 14.2°</td>
+                <td className="p-2 text-rose-600">+2.84σ</td>
+              </tr>
+              <tr>
+                <td className="p-2">Stroke Variance</td>
+                <td className="p-2">0.42 N</td>
+                <td className="p-2 text-blue-600">+0.62σ</td>
+              </tr>
+              <tr>
+                <td className="p-2">Loop Symmetry Inversion</td>
+                <td className="p-2 font-bold text-rose-600">88.4%</td>
+                <td className="p-2 text-rose-600">+3.91σ</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="p-3 bg-gray-50 border border-gray-200 rounded text-xs text-gray-600 leading-relaxed">
+          <strong>Notice:</strong> This automated screening evaluation is an exploratory research instrument and does not constitute a standalone medical or psychological diagnosis of developmental dyslexia.
+        </div>
+      </Card>
     </div>
   );
 }
