@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card } from '../components/ui/Card';
-import { mockPrediction } from '../utils/api';
 import { Printer, Download, Brain, ShieldCheck, PageSearch, CheckCircle, WarningTriangle, Activity, Database, Page, ArrowLeft } from 'iconoir-react';
 import { Button } from '../components/ui/Button';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -11,7 +10,7 @@ export default function Report() {
 
   const prediction = location.state?.prediction;
   const filename = location.state?.filename || prediction?.filename || 'specimen_p1084_cursive_eval.png';
-  const data = prediction || mockPrediction;
+  const data = prediction || {};
 
   const handleDownload = () => {
     window.print();

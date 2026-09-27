@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+tensorflow
+scikit-learn==1.9.0
+joblib
+numpy
+Pillow
+mysql-connector-python

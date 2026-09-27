@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
-import { mockPrediction } from '../utils/api';
 import { ShieldCheck, Download, Flask, ScanBarcode, NavArrowRight, Activity, Cpu, BrainElectricity, GitCompare, ViewGrid, WarningTriangle, ArrowLeft, FireFlame, Expand, Copy, Check, Eye } from 'iconoir-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
@@ -14,17 +13,40 @@ export default function Result() {
   const shouldReduceMotion = useReducedMotion();
   const { addToast } = useToast();
 
-  const stateData = location.state?.prediction || location.state?.record;
-  const previewUrl = location.state?.previewUrl;
-  const filename = location.state?.filename || stateData?.filename || 'specimen_p1084_cursive_eval.png';
+  const stateData =
+  location.state?.prediction ||
+  location.state?.record ||
+  {};
 
-  const data = {
-    ...mockPrediction,
-    ...(stateData || {}),
-    id: stateData?.id || mockPrediction.id,
-    category: stateData?.category || mockPrediction.category,
-    confidence: stateData?.confidence || mockPrediction.confidence,
-  };
+const previewUrl = location.state?.previewUrl;
+
+const filename =
+  location.state?.filename ||
+  stateData?.filename ||
+  'Unknown specimen';
+const data = {
+  id: stateData?.id ?? 'N/A',
+
+  category:
+    stateData?.category ??
+    stateData?.class_name ??
+    'Unknown',
+
+  confidence:
+    Number.isFinite(Number(stateData?.confidence))
+      ? Number(stateData.confidence)
+      : null,
+
+  probabilities: {
+    Normal: Number(stateData?.probabilities?.Normal ?? 0),
+    Reversal: Number(stateData?.probabilities?.Reversal ?? 0),
+    Corrected: Number(stateData?.probabilities?.Corrected ?? 0),
+  },
+
+  filename:
+    stateData?.filename ||
+    filename,
+};
 
   const isReversal = data.category === 'Reversal';
   const isCorrected = data.category === 'Corrected';
@@ -330,7 +352,7 @@ export default function Result() {
 
           {/* Probability Distribution */}
           <Card className="p-6">
-            <h3 className="text-sm font-semibold text-on-surface mb-4">Posterior Probability Distribution</h3>
+            <h3 className="text-sm font-semibold text-on-surface mb-4">Model Score Distribution</h3>
             <div className="space-y-4 font-mono text-xs">
               <div>
                 <div className="flex justify-between mb-1">

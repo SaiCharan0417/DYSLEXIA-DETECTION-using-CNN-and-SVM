@@ -5,7 +5,7 @@ import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Dropzone } from '../components/domain/Dropzone';
-import { getHistory, mockHistory } from '../utils/api';
+import { getHistory } from '../utils/api';
 import { ShieldCheck, OpenBook, Folder, CloudUpload, GraphUp, Activity, ScanBarcode, Filter, ClockRotateRight, Network, ElectronicsChip, NavArrowRight, Play } from 'iconoir-react';
 import { ProtocolModal } from '../components/domain/ProtocolModal';
 import { BatchImportModal } from '../components/domain/BatchImportModal';
@@ -15,7 +15,7 @@ export default function Dashboard() {
   const shouldReduceMotion = useReducedMotion();
   const easeOut = [0.23, 1, 0.32, 1];
 
-  const [history, setHistory] = useState(mockHistory);
+  const [history, setHistory] = useState([]);
   const [isProtocolOpen, setIsProtocolOpen] = useState(false);
   const [isBatchOpen, setIsBatchOpen] = useState(false);
 

@@ -58,11 +58,11 @@ export default function Processing() {
       setTimeout(() => {
         navigate('/result', {
           state: {
-            prediction: res?.result,
-            previewUrl,
-            filename
-          }
-        });
+          prediction: res,
+          previewUrl,
+          filename
+  }
+});
       }, 500);
     });
 
