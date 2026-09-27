@@ -1,0 +1,51 @@
+{
+  "source_png_files": 208372,
+  "unique_pixel_images": 177540,
+  "exact_duplicate_files_removed": 30832,
+  "cross_class_duplicate_hashes_removed": 54,
+  "unique_by_class_before_balance": {
+    "Normal": 58179,
+    "Reversal": 58317,
+    "Corrected": 60990
+  },
+  "balanced_images_per_class": 58179,
+  "classes": {
+    "Normal": 0,
+    "Reversal": 1,
+    "Corrected": 2
+  },
+  "image_size": [
+    32,
+    32
+  ],
+  "split": {
+    "train": 0.7,
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "seed": 42,
+  "train": {
+    "images": 122175,
+    "class_counts": {
+      "Normal": 40725,
+      "Reversal": 40725,
+      "Corrected": 40725
+    }
+  },
+  "val": {
+    "images": 26181,
+    "class_counts": {
+      "Normal": 8727,
+      "Reversal": 8727,
+      "Corrected": 8727
+    }
+  },
+  "test": {
+    "images": 26181,
+    "class_counts": {
+      "Normal": 8727,
+      "Reversal": 8727,
+      "Corrected": 8727
+    }
+  }
+}

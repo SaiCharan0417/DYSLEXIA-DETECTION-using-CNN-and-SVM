@@ -123,7 +123,7 @@ def process_zip(zip_path: str, output_dir: str = "dyslexia_preprocessed"):
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     rng = random.Random(SEED)
 
-    with zipfile.ZipFile(zip_path) as z:
+    with zipfile.ZipFile(r"C:\Users\MEGHANA\Downloads\Dyslexia Handwriting Dataset — Kaggle.zip") as z:
         by_hash = discover_images(z)
         splits, unique_counts, cross_class_count = make_clean_selection(by_hash)
 
