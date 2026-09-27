@@ -1,66 +1,80 @@
-import React from 'react';
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useOutlet } from 'react-router-dom';
+import { motion, useReducedMotion } from 'motion/react';
+import { Sidebar } from './Sidebar';
+import { Header } from './Header';
+import { CommandPalette } from '../domain/CommandPalette';
 
 export default function AppLayout() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
+  const outlet = useOutlet();
+  const shouldReduceMotion = useReducedMotion();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
+  const easeOut = [0.23, 1, 0.32, 1];
+
+  // Cmd+K / Ctrl+K keyboard shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleScroll = (e) => {
+    const top = e.currentTarget.scrollTop;
+    if (top > 12 && !isScrolled) {
+      setIsScrolled(true);
+    } else if (top <= 12 && isScrolled) {
+      setIsScrolled(false);
+    }
   };
 
-  const navLinks = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Upload', path: '/upload' },
-    { name: 'History', path: '/history' },
-    { name: 'Settings', path: '/settings' },
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
-      <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shadow-xs sticky top-0 z-30">
-        <div className="flex items-center gap-6">
-          <Link to="/" className="text-lg font-bold text-blue-600 hover:text-blue-700">
-            NeuroWrite AI <span className="text-xs font-normal text-gray-500 border border-gray-300 rounded px-1.5 py-0.5 ml-1">Prototype</span>
-          </Link>
-          <nav className="flex gap-4 text-sm font-medium">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`transition-colors ${
-                  location.pathname === link.path
-                    ? 'text-blue-600 font-semibold'
-                    : 'text-gray-600 hover:text-blue-600'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
-        </div>
-        <div className="flex items-center gap-4 text-sm">
-          {user ? (
-            <>
-              <span className="text-gray-600 font-medium">{user.email || 'Researcher'}</span>
-              <button
-                onClick={handleLogout}
-                className="text-red-600 hover:text-red-700 text-xs font-semibold px-2.5 py-1 rounded border border-red-200 hover:bg-red-50 transition-colors cursor-pointer"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link to="/login" className="text-blue-600 hover:underline font-medium">Login</Link>
-          )}
-        </div>
-      </header>
-      <main className="flex-1 max-w-4xl w-full mx-auto p-6">
-        <Outlet />
-      </main>
+    <div className="min-h-screen bg-surface text-on-surface font-body flex">
+      {/* Sidebar with Mobile Drawer capability */}
+      <Sidebar
+        isMobileOpen={isMobileSidebarOpen}
+        onCloseMobile={() => setIsMobileSidebarOpen(false)}
+      />
+
+      <div className="flex-1 flex flex-col min-h-screen w-full lg:pl-64">
+        {/* Header with hamburger and Command trigger */}
+        <Header
+          isScrolled={isScrolled}
+          onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+          onToggleMobileSidebar={() => setIsMobileSidebarOpen(prev => !prev)}
+        />
+
+        <main
+          onScroll={handleScroll}
+          className="relative pt-20 flex-1 w-full bg-surface px-4 sm:px-6 lg:px-8 pb-12 overflow-y-auto"
+        >
+          <div className="max-w-[1600px] mx-auto w-full">
+            <motion.div
+              key={location.pathname}
+              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, transform: "translateY(4px)" }}
+              animate={{ opacity: 1, transform: "translateY(0px)" }}
+              transition={{ duration: 0.14, ease: easeOut }}
+            >
+              {outlet}
+            </motion.div>
+          </div>
+        </main>
+      </div>
+
+      {/* Global Command Palette Spotlight Dialog */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+      />
     </div>
   );
 }

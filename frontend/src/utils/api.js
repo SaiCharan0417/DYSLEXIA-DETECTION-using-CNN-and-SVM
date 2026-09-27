@@ -3,32 +3,35 @@ const API_BASE = import.meta.env.VITE_API_URL || '/api';
 const mockUser = {
   name: 'Dr. Elena Vance',
   email: 'e.vance@neuro-research.org',
-  role: 'Researcher'
+  role: 'Principal Researcher',
+  institution: 'Cambridge Cognitive Institute'
 };
 
 const mockHistory = [
-  { id: 'REC-2024-001', date: '2026-09-22', file: 'sample_01.png', category: 'Reversal', confidence: 97.2, status: 'Completed' },
-  { id: 'REC-2024-002', date: '2026-09-21', file: 'sample_02.png', category: 'Normal', confidence: 99.1, status: 'Completed' },
-  { id: 'REC-2024-003', date: '2026-09-20', file: 'sample_03.png', category: 'Corrected', confidence: 91.5, status: 'Completed' },
-  { id: 'REC-2024-004', date: '2026-09-19', file: 'sample_04.png', category: 'Normal', confidence: 98.4, status: 'Completed' },
-  { id: 'REC-2024-005', date: '2026-09-18', file: 'sample_05.png', category: 'Reversal', confidence: 89.2, status: 'Completed' },
+  { id: 'NW-8921', date: 'Today, 09:42 AM', subject: 'Subject 409-B (Age 7;2)', category: 'Reversal', confidence: 97.2, status: 'Completed' },
+  { id: 'NW-8920', date: 'Today, 08:15 AM', subject: 'Subject 104-A (Age 9;0)', category: 'Normal', confidence: 96.8, status: 'Completed' },
+  { id: 'NW-8919', date: 'Yesterday, 04:30 PM', subject: 'Subject 212-C (Age 6;8)', category: 'Corrected', confidence: 91.2, status: 'Completed' },
+  { id: 'NW-8918', date: 'Yesterday, 02:10 PM', subject: 'Subject 305-D (Age 11;4)', category: 'Normal', confidence: 98.1, status: 'Completed' },
+  { id: 'NW-8917', date: 'Oct 24, 11:05 AM', subject: 'Subject 118-B (Age 8;1)', category: 'Reversal', confidence: 88.5, status: 'In Review' },
 ];
 
 const mockPrediction = {
-  id: 'REC-2024-001',
+  id: 'NW-84920',
   category: 'Reversal',
   confidence: 97.2,
   probabilities: [
-    { label: 'Reversal', value: 97.2 },
-    { label: 'Corrected', value: 2.1 },
-    { label: 'Normal', value: 0.7 },
+    { label: 'Reversal (Mirror Writing)', value: 97.2 },
+    { label: 'Letter Inversion / Rotation', value: 2.1 },
+    { label: 'Normal / Symmetrical Motor Flow', value: 0.7 },
   ],
   metrics: {
-    ascenderRatio: 1.82,
-    strokeVariation: '1.4 px',
-    symmetryIndex: '88.4%',
+    ascenderRatio: 'Δ 14.2° Tilt',
+    strokePressure: '0.42 N (+0.62σ)',
+    mirrorSymmetryIndex: '88.4% Reflected (+3.91σ)',
   },
-  filename: 'specimen_001.png'
+  processedAt: 'Today, 10:42 AM',
+  latencyMs: 140,
+  filename: 'specimen_p1084_cursive_eval.png'
 };
 
 function delay(ms = 300) {
@@ -36,7 +39,7 @@ function delay(ms = 300) {
 }
 
 export function getAuthHeaders() {
-  const token = localStorage.getItem('proto_token');
+  const token = localStorage.getItem('neurowrite_token');
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
@@ -56,9 +59,9 @@ export async function register(data) {
   }
   await delay(400);
   const user = { ...mockUser, email: data.email, name: data.name || mockUser.name };
-  localStorage.setItem('proto_user', JSON.stringify(user));
-  localStorage.setItem('proto_token', 'proto_jwt_' + Date.now());
-  return { success: true, user, token: 'proto_jwt_' + Date.now() };
+  localStorage.setItem('neurowrite_user', JSON.stringify(user));
+  localStorage.setItem('neurowrite_token', 'mock_jwt_' + Date.now());
+  return { success: true, user, token: 'mock_jwt_' + Date.now() };
 }
 
 // POST /login
@@ -77,9 +80,9 @@ export async function login(credentials) {
   }
   await delay(300);
   const user = { ...mockUser, email: credentials.email || mockUser.email };
-  localStorage.setItem('proto_user', JSON.stringify(user));
-  localStorage.setItem('proto_token', 'proto_jwt_' + Date.now());
-  return { success: true, user, token: 'proto_jwt_' + Date.now() };
+  localStorage.setItem('neurowrite_user', JSON.stringify(user));
+  localStorage.setItem('neurowrite_token', 'mock_jwt_' + Date.now());
+  return { success: true, token: 'mock_jwt_' + Date.now(), user };
 }
 
 // POST /predict (multipart/form-data)
@@ -104,7 +107,7 @@ export async function predict(file) {
     success: true,
     result: {
       ...mockPrediction,
-      id: 'REC-' + Math.floor(1000 + Math.random() * 9000),
+      id: 'NW-' + Math.floor(10000 + Math.random() * 90000),
       filename: file?.name || mockPrediction.filename
     }
   };

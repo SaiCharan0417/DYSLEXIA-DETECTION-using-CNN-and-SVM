@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { login as apiLogin, register as apiRegister, mockUser } from '../utils/api';
 
 const AuthContext = createContext(null);
@@ -6,7 +6,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
-      const saved = localStorage.getItem('proto_user');
+      const saved = localStorage.getItem('neurowrite_user');
       return saved ? JSON.parse(saved) : mockUser;
     } catch {
       return mockUser;
@@ -30,8 +30,8 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('proto_user');
-    localStorage.removeItem('proto_token');
+    localStorage.removeItem('neurowrite_user');
+    localStorage.removeItem('neurowrite_token');
     setUser(null);
   };
 
