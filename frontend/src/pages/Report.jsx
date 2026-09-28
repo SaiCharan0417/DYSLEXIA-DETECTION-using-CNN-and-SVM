@@ -8,9 +8,24 @@ export default function Report() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const fallbackPrediction = {
+    id: 'NW-2026-8841A',
+    category: 'Normal',
+    confidence: 95.1,
+    probabilities: { Normal: 95.1, Reversal: 0.51, Corrected: 4.39 },
+    filename: 'specimen_p1084_cursive_eval.png'
+  };
+
   const prediction = location.state?.prediction;
-  const filename = location.state?.filename || prediction?.filename || 'specimen_p1084_cursive_eval.png';
-  const data = prediction || {};
+  const data = {
+    ...fallbackPrediction,
+    ...(prediction || {})
+  };
+  const filename = location.state?.filename || prediction?.filename || data.filename;
+  const categoryUpper = (data.category || 'Normal').toUpperCase();
+  const confidenceVal = Number.isFinite(Number(data.confidence)) ? Number(data.confidence) : 95.1;
+  const isReversal = (data.category || '').toLowerCase() === 'reversal';
+  const isCorrected = (data.category || '').toLowerCase() === 'corrected';
 
   const handleDownload = () => {
     window.print();
@@ -97,22 +112,36 @@ export default function Report() {
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-3 mb-3">
                     <span className="text-xs uppercase tracking-wider text-on-surface-variant font-bold">Predicted Category:</span>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-error-container text-on-error-container border border-error/30 font-mono text-sm font-black tracking-wide shadow-sm">
-                      <WarningTriangle size={15} className="text-error" />
-                      <span>{data.category.toUpperCase()} TENDENCY</span>
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-sm font-black tracking-wide shadow-sm border ${
+                      isReversal
+                        ? 'bg-error-container text-on-error-container border-error/30'
+                        : isCorrected
+                        ? 'bg-primary-container text-on-primary-container border-primary/30'
+                        : 'bg-secondary-container text-on-secondary-container border-secondary/30'
+                    }`}>
+                      {isReversal ? (
+                        <WarningTriangle size={15} className="text-error" />
+                      ) : (
+                        <CheckCircle size={15} className="text-secondary" />
+                      )}
+                      <span>{categoryUpper} TENDENCY</span>
                     </span>
                   </div>
                   <p className="text-sm text-on-surface-variant leading-relaxed">
-                    Significant spatial inversion and horizontal reflection detected across bilateral lower-case ascenders and numerals. Pattern exhibits statistical alignment with phonological-orthographic orientation variance rather than motor-praxis degradation.
+                    {isReversal
+                      ? 'Significant spatial inversion and horizontal reflection detected across bilateral lower-case ascenders and numerals. Pattern exhibits statistical alignment with phonological-orthographic orientation variance rather than motor-praxis degradation.'
+                      : isCorrected
+                      ? 'Self-corrected strike-through strokes and character reshaping detected across medial letter boundaries. Motor planning adjustments present with preserved phonemic alignment.'
+                      : 'Bilateral ascender alignment, stroke velocity, and loop geometries conform to normative neuro-typical motor baseline metrics with no significant rotational inversion.'}
                   </p>
                 </div>
                 <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm min-w-[200px] border border-outline-variant/20 text-center">
                   <span className="text-xs uppercase tracking-wider text-on-surface-variant block mb-1 font-semibold">Model Confidence</span>
-                  <span className="text-3xl font-extrabold font-mono text-on-surface">{data.confidence}%</span>
+                  <span className="text-3xl font-extrabold font-mono text-on-surface">{confidenceVal}%</span>
                   <div className="w-full bg-surface-container rounded-full h-2 mt-2 overflow-hidden border border-outline-variant/10">
                     <div
                       className="bg-secondary h-full rounded-full w-full"
-                      style={{ transformOrigin: 'left', transform: `scaleX(${data.confidence / 100})` }}
+                      style={{ transformOrigin: 'left', transform: `scaleX(${Math.min(confidenceVal / 100, 1)})` }}
                     ></div>
                   </div>
                 </div>

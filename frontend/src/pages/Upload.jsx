@@ -62,24 +62,23 @@ export default function Upload() {
     if (file) processFile(file);
   };
 
-  const handleQuickSample = (scenario = 'Reversal') => {
-    const filename = scenario === 'Reversal'
-      ? 'specimen_p1084_reversal.png'
-      : scenario === 'Normal'
-      ? 'specimen_c104_normal.png'
-      : 'specimen_h212_corrected.png';
-    const blob = new Blob(["mock-specimen-bytes"], { type: "image/png" });
-    const sampleFile = new File([blob], filename, { type: "image/png" });
-    setSelectedFile(sampleFile);
-    setPreviewUrl(null);
-    setFileMeta({
-      name: filename,
-      size: "4.8 MB (Lossless)",
-      dimensions: "2400 × 1600 px",
-      dpi: "300 DPI (Calibrated)",
-      brightness: "98.2% Balanced"
-    });
-    addToast(`Loaded ${scenario} reference specimen`, 'info');
+  const handleQuickSample = async (scenario = 'Reversal') => {
+    const sampleMap = {
+      Reversal: { file: 'reversal_sample.png', name: 'specimen_p1084_reversal.png' },
+      Normal: { file: 'normal_sample.png', name: 'specimen_c104_normal.png' },
+      Corrected: { file: 'corrected_sample.png', name: 'specimen_h212_corrected.png' }
+    };
+    const target = sampleMap[scenario] || sampleMap.Normal;
+
+    try {
+      const res = await fetch(`/samples/${target.file}`);
+      const blob = await res.blob();
+      const file = new File([blob], target.name, { type: "image/png" });
+      processFile(file);
+      addToast(`Loaded ${scenario} reference specimen`, 'info');
+    } catch (err) {
+      addToast('Failed to load sample image', 'error');
+    }
   };
 
   const handleRemove = () => {

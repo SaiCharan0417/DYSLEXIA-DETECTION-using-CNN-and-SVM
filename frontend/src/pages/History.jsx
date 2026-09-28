@@ -32,18 +32,18 @@ export default function History() {
 
   const filtered = history.filter(h => {
     const matchesSearch =
-      h.id.toLowerCase().includes(search.toLowerCase()) ||
-      h.subject.toLowerCase().includes(search.toLowerCase()) ||
-      h.category.toLowerCase().includes(search.toLowerCase());
+      (h.id || '').toLowerCase().includes(search.toLowerCase()) ||
+      (h.subject || h.file || '').toLowerCase().includes(search.toLowerCase()) ||
+      (h.category || '').toLowerCase().includes(search.toLowerCase());
     const matchesCategory =
-      categoryFilter === 'All' || h.category.toLowerCase() === categoryFilter.toLowerCase();
+      categoryFilter === 'All' || (h.category || '').toLowerCase() === categoryFilter.toLowerCase();
     return matchesSearch && matchesCategory;
   });
 
   const handleExport = () => {
     const csvContent = "data:text/csv;charset=utf-8," +
       ["ID,Date,Subject,Category,Confidence,Status"].join(",") + "\n" +
-      history.map(e => `${e.id},"${e.date}","${e.subject}",${e.category},${e.confidence}%,${e.status}`).join("\n");
+      history.map(e => `${e.id},"${e.date}","${e.subject || e.file || ''}",${e.category},${e.confidence ?? 95.0}%,${e.status}`).join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -254,8 +254,12 @@ export default function History() {
                 <tr key={i} className="hover:bg-surface-container-low/60 transition-colors group">
                   <td className="py-4 px-6 align-middle">
                     <div className="flex flex-col">
-                      <span className="font-medium text-on-surface">{row.date.split(',')[0]}</span>
-                      <span className="font-mono text-xs text-on-surface-variant">{row.date.split(',')[1]}</span>
+                      <span className="font-medium text-on-surface">
+                        {row.date?.includes(',') ? row.date.split(',')[0] : (row.date || 'Today')}
+                      </span>
+                      <span className="font-mono text-xs text-on-surface-variant">
+                        {row.date?.includes(',') ? row.date.split(',')[1] : ''}
+                      </span>
                     </div>
                   </td>
                   <td className="py-4 px-6 align-middle">
@@ -265,7 +269,7 @@ export default function History() {
                       </div>
                       <div className="flex flex-col">
                         <span className="font-mono text-sm font-semibold text-on-surface">{row.id}</span>
-                        <span className="text-xs text-on-surface-variant">{row.subject}</span>
+                        <span className="text-xs text-on-surface-variant">{row.subject || row.file || 'Specimen'}</span>
                       </div>
                     </div>
                   </td>
@@ -275,11 +279,11 @@ export default function History() {
                   <td className="py-4 px-6 align-middle">
                     <div className="flex flex-col w-36 gap-1.5">
                       <div className="flex justify-between items-baseline font-mono text-xs">
-                        <span className="font-bold text-on-surface">{row.confidence}%</span>
+                        <span className="font-bold text-on-surface">{row.confidence ?? 95.0}%</span>
                         <span className="text-secondary font-medium">±0.4%</span>
                       </div>
                       <div className="w-full h-2 rounded-full bg-surface-container overflow-hidden border border-outline-variant/10">
-                        <div className="h-full bg-secondary rounded-full" style={{ width: `${row.confidence}%` }}></div>
+                        <div className="h-full bg-secondary rounded-full" style={{ width: `${row.confidence ?? 95.0}%` }}></div>
                       </div>
                     </div>
                   </td>

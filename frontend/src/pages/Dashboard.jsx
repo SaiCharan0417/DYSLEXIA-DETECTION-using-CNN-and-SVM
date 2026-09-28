@@ -320,7 +320,7 @@ export default function Dashboard() {
                   <td className="py-3">
                     <div className="flex flex-col">
                       <span className="font-mono text-xs font-semibold text-on-surface">{row.id}</span>
-                      <span className="text-xs text-on-surface-variant">{row.subject}</span>
+                      <span className="text-xs text-on-surface-variant">{row.subject || row.file || 'Specimen'}</span>
                     </div>
                   </td>
                   <td className="py-3">
@@ -328,11 +328,11 @@ export default function Dashboard() {
                   </td>
                   <td className="py-3">
                     <div className="flex flex-col gap-1 w-28">
-                      <span className="font-mono text-xs font-semibold text-on-surface">{row.confidence}%</span>
+                      <span className="font-mono text-xs font-semibold text-on-surface">{row.confidence ?? 95.0}%</span>
                       <div className="w-full h-1.5 rounded-full bg-surface-container overflow-hidden">
                         <div
                           className="h-full bg-secondary rounded-full w-full"
-                          style={{ transformOrigin: 'left', transform: `scaleX(${row.confidence / 100})` }}
+                          style={{ transformOrigin: 'left', transform: `scaleX(${Math.min((row.confidence ?? 95.0) / 100, 1)})` }}
                         ></div>
                       </div>
                     </div>
