@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DyslexiaLens — AI Handwriting Screening</title>
+  <meta name="description" content="DyslexiaLens is a modern handwriting-based preliminary screening prototype." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- LANDING PAGE -->
+    <section class="page landing-page" id="landingPage">
+      <div class="landing-noise"></div>
+      <header class="landing-nav">
+        <a class="brand brand-light" href="javascript:void(0)">
+          <span class="brand-mark">D</span>
+          <span>Dyslexia<span class="brand-accent">Lens</span></span>
+        </a>
+        <button class="btn btn-outline-light btn-small" data-action="signin">Sign in</button>
+      </header>
+
+      <div class="landing-grid">
+        <div class="landing-copy">
+          <span class="eyebrow eyebrow-light">AI • HANDWRITING • PRELIMINARY SCREENING</span>
+          <h1>See the patterns<br><em>behind the writing.</em></h1>
+          <p>
+            DyslexiaLens analyzes handwriting patterns using a machine-learning pipeline
+            and turns the result into a clear, supportive report.
+          </p>
+
+          <div class="landing-actions">
+            <button class="btn btn-champagne btn-large" data-action="signin">
+              Get Started <span>→</span>
+            </button>
+            <button class="text-link light-link" data-scroll="landingHow">Learn more ↓</button>
+          </div>
+
+          <div class="landing-trust">
+            <span>✓ Image-based analysis</span>
+            <span>✓ Explainable result view</span>
+            <span>✓ Supportive learning ideas</span>
+          </div>
+        </div>
+
+        <div class="hero-art">
+          <div class="art-halo"></div>
+          <div class="art-ring ring-1"></div>
+          <div class="art-ring ring-2"></div>
+          <div class="paper-art">
+            <div class="paper-top">
+              <span>HANDWRITING SAMPLE</span>
+              <span class="sample-dot"></span>
+            </div>
+            <div class="ruled-paper">
+              <div class="script-line">A curious mind can learn</div>
+              <div class="script-line smaller">in many different ways.</div>
+              <div class="underline"></div>
+            </div>
+            <div class="paper-footer">
+              <span>AI feature extraction</span>
+              <span>98.2%</span>
+            </div>
+          </div>
+          <div class="floating-badge badge-one">MobileNetV2</div>
+          <div class="floating-badge badge-two">SVM</div>
+          <div class="floating-badge badge-three">Grad-CAM</div>
+        </div>
+      </div>
+
+      <div class="landing-how" id="landingHow">
+        <div><span class="mini-number">01</span><strong>Upload</strong><p>Choose a clear handwriting image.</p></div>
+        <div><span class="mini-number">02</span><strong>Analyze</strong><p>The model extracts learned handwriting features.</p></div>
+        <div><span class="mini-number">03</span><strong>Understand</strong><p>Review a structured screening report.</p></div>
+      </div>
+
+      <div class="screening-note">
+        <span>i</span>
+        <p>Prototype notice: DyslexiaLens is designed for preliminary screening and educational support, not medical diagnosis.</p>
+      </div>
+    </section>
+
+    <!-- AUTH -->
+    <section class="page auth-page hidden" id="authPage">
+      <div class="auth-shell">
+        <div class="auth-brand">
+          <a class="brand brand-dark" href="javascript:void(0)" data-action="home">
+            <span class="brand-mark">D</span>
+            <span>Dyslexia<span class="brand-accent">Lens</span></span>
+          </a>
+        </div>~
+
+        <div class="auth-card">
+          <div class="auth-panel" id="signinPanel">
+            <span class="eyebrow">WELCOME BACK</span>
+            <h2>Sign in to your account</h2>
+            <p class="auth-subtitle">Access your dashboard and saved reports.</p>
+
+            <button class="google-btn" id="googleSignIn">
+              <span class="google-icon">G</span>
+              Continue with Google
+            </button>
+
+            <div class="or-divider"><span>or continue with email</span></div>
+
+            <form id="signinForm">
+              <label>Email address</label>
+              <input type="email" id="signinEmail" placeholder="you@example.com" required />
+
+              <label>Password</label>
+              <div class="password-wrap">
+                <input type="password" id="signinPassword" placeholder="Enter your password" minlength="4" required />
+                <button type="button" class="show-pass" data-target="signinPassword">Show</button>
+              </div>
+
+              <div class="form-row">
+                <label class="checkbox-label"><input type="checkbox" /> Remember me</label>
+                <button type="button" class="text-link green-link" id="forgotPassword">Forgot password?</button>
+              </div>
+
+              <button class="btn btn-emerald btn-full" type="submit">Sign in <span>→</span></button>
+
+              <div style="margin-top:14px;padding:10px 14px;border-radius:10px;background:#F0FDF4;border:1px solid #DCFCE7;font-size:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="color:#166534;font-weight:600;">Demo Account</span>
+                  <button type="button" id="quickDemoBtn" class="text-link green-link" style="font-weight:700;font-size:11px;cursor:pointer;">Autofill Demo Login</button>
+                </div>
+                <div style="color:#4B5563;font-size:11px;margin-top:4px;">
+                  <code>demo@dyslexialens.com</code> / <code>demo123</code>
+                </div>
+              </div>
+            </form>
+
+            <p class="auth-switch">Don't have an account? <button class="text-link green-link" data-auth="signup">Create one</button></p>
+          </div>
+
+          <div class="auth-panel hidden" id="signupPanel">
+            <span class="eyebrow">CREATE ACCOUNT</span>
+            <h2>Start your screening journey</h2>
+            <p class="auth-subtitle">Create an account to save your reports and track analyses.</p>
+
+            <form id="signupForm">
+              <div class="two-col">
+                <div>
+                  <label>First name</label>
+                  <input type="text" id="signupFirstName" placeholder="Santhosh" required />
+                </div>
+                <div>
+                  <label>Last name</label>
+                  <input type="text" id="signupLastName" placeholder="Kumar" required />
+                </div>
+              </div>
+
+              <label>Email address</label>
+              <input type="email" id="signupEmail" placeholder="you@example.com" required />
+
+              <label>Password</label>
+              <div class="password-wrap">
+                <input type="password" id="signupPassword" placeholder="Create a password" minlength="4" required />
+                <button type="button" class="show-pass" data-target="signupPassword">Show</button>
+              </div>
+
+              <label class="checkbox-label terms"><input type="checkbox" required /> I agree to the prototype terms and privacy notice.</label>
+
+              <button class="btn btn-emerald btn-full" type="submit">Create account <span>→</span></button>
+            </form>
+
+            <p class="auth-switch">Already have an account? <button class="text-link green-link" data-auth="signin">Sign in</button></p>
+          </div>
+
+          <div class="auth-side">
+            <div class="side-logo">D</div>
+            <h3>One place for every report.</h3>
+            <p>Save screening results and keep the whole experience organized.</p>
+            <div class="side-stat"><span>Preliminary screening</span><strong>AI-assisted</strong></div>
+            <div class="side-stat"><span>Report view</span><strong>Explainable</strong></div>
+            <div class="side-stat"><span>Learning support</span><strong>Included</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD APP -->
+    <section class="page app-page hidden" id="appPage">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+          <a class="brand brand-dark" href="javascript:void(0)" data-view="dashboard">
+            <span class="brand-mark">D</span>
+            <span>Dyslexia<span class="brand-accent">Lens</span></span>
+          </a>
+
+          <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">×</button>
+
+          <nav class="side-nav">
+            <button class="side-nav-item active" data-view="dashboard"><span>⌂</span> Dashboard</button>
+            <button class="side-nav-item" data-view="upload"><span>↑</span> Upload & Analyze</button>
+            <button class="side-nav-item" data-view="reports"><span>▤</span> Reports</button>
+            <button class="side-nav-item" data-view="about"><span>i</span> About</button>
+          </nav>
+        </div>
+
+        <div class="sidebar-bottom">
+          <button class="side-nav-item" data-view="settings"><span>⚙</span> Settings</button>
+          <button class="side-nav-item theme-side" id="themeToggleSide"><span id="themeIconSide">☾</span> <span id="themeTextSide">Dark mode</span></button>
+          <div class="user-mini" id="userMini">
+            <div class="avatar" id="avatarSmall">S</div>
+            <div><strong id="userMiniName">Santhosh</strong><span id="userMiniEmail">you@example.com</span></div>
+            <button id="logoutBtn" title="Sign out">↪</button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="app-main">
+        <header class="app-header">
+          <button class="menu-toggle" id="menuToggle">☰</button>
+          <div class="header-search"><span>⌕</span><input type="text" placeholder="Search reports, analyses..." /></div>
+          <div class="header-right">
+            <button class="icon-btn" id="themeToggleHeader" title="Toggle theme">☾</button>
+            <button class="icon-btn notification-btn" title="Notifications">♢<span></span></button>
+            <div class="header-user">
+              <div class="avatar" id="avatarHeader">S</div>
+              <div><strong id="headerUserName">Santhosh</strong><small>Member</small></div>
+            </div>
+          </div>
+        </header>
+
+        <main class="app-content">
+
+          <!-- DASHBOARD VIEW -->
+          <div class="view" id="view-dashboard">
+            <div class="page-title-row">
+              <div>
+                <span class="eyebrow">OVERVIEW</span>
+                <h1>Good afternoon, <span id="greetingName">Santhosh</span> 👋</h1>
+                <p>Here is what is happening with your screening dashboard.</p>
+              </div>
+              <button class="btn btn-emerald" data-view="upload">+ New analysis</button>
+            </div>
+
+            <div class="stats-grid">
+              <article class="stat-card accent-card">
+                <div class="stat-head"><span>Total analyses</span><i>↗</i></div>
+                <strong id="totalAnalyses">12</strong>
+                <p><span class="positive">+3</span> this month</p>
+                <div class="sparkline"><span style="height:35%"></span><span style="height:45%"></span><span style="height:30%"></span><span style="height:60%"></span><span style="height:50%"></span><span style="height:80%"></span><span style="height:68%"></span><span style="height:92%"></span></div>
+              </article>
+
+              <article class="stat-card">
+                <div class="stat-head"><span>Model accuracy</span><i>◎</i></div>
+                <strong id="modelAccuracyValue">—</strong>
+                <p id="modelAccuracySub">Not exposed by current API</p>
+                <div class="progress-line"><span id="accuracyProgress" style="width:0%"></span></div>
+              </article>
+
+              <article class="stat-card">
+                <div class="stat-head"><span>Reports saved</span><i>▤</i></div>
+                <strong id="savedReports">8</strong>
+                <p>Ready to revisit</p>
+                <div class="report-dots"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+              </article>
+
+              <article class="stat-card">
+                <div class="stat-head"><span>Last analysis</span><i>◷</i></div>
+                <strong id="lastAnalysisDate">Today</strong>
+                <p id="lastAnalysisTime">2:34 PM</p>
+                <div class="mini-badge">Completed</div>
+              </article>
+            </div>
+
+            <div class="dashboard-grid">
+              <article class="dashboard-card welcome-card">
+                <div>
+                  <span class="eyebrow">WHAT DOES DYSLEXIALENS DO?</span>
+                  <h2>Turn handwriting into a structured AI report.</h2>
+                  <p>
+                    Upload handwriting, send it to your FastAPI/ML pipeline and review a
+                    preliminary screening result. The report can show prediction,
+                    confidence, learned patterns and model steps in one place.
+                  </p>
+                </div>
+                <div class="welcome-visual">
+                  <div class="mini-paper"><span>abc</span><span>reading</span><span>writing</span></div>
+                  <div class="orbit-dot dot-a"></div><div class="orbit-dot dot-b"></div><div class="orbit-dot dot-c"></div>
+                </div>
+              </article>
+
+              <article class="dashboard-card recent-card">
+                <div class="card-title-row"><div><span class="eyebrow">RECENT</span><h3>Latest reports</h3></div><button class="text-link green-link" data-view="reports">View all</button></div>
+                <div class="recent-list" id="recentList"></div>
+              </article>
+            </div>
+
+            <div class="dashboard-grid bottom-grid">
+              <article class="dashboard-card model-card">
+                <div class="card-title-row"><div><span class="eyebrow">MODEL</span><h3>Current AI pipeline</h3></div><span class="live-pill" id="backendStatusPill">API</span></div>
+                <div class="pipeline-mini">
+                  <div><span>01</span><strong>32×32 Input</strong></div><i>→</i><div><span>02</span><strong>CNN 128-D</strong></div><i>→</i><div><span>03</span><strong>LinearSVC</strong></div><i>→</i><div><span>04</span><strong>Class</strong></div>
+                </div>
+              </article>
+
+              <article class="dashboard-card support-card">
+                <div class="support-icon">✦</div>
+                <div><span class="eyebrow">NEXT STEP</span><h3>Keep your reports organized</h3><p>Use Reports to review saved analyses and revisit your screening results.</p></div>
+                <button class="icon-circle" data-view="reports">→</button>
+              </article>
+            </div>
+          </div>
+
+          <!-- UPLOAD VIEW -->
+          <div class="view hidden" id="view-upload">
+            <div class="page-title-row">
+              <div><span class="eyebrow">NEW ANALYSIS</span><h1>Upload handwriting</h1><p>Use a clear image of a letter, word or sentence.</p></div>
+            </div>
+
+            <div class="upload-page-grid">
+              <article class="dashboard-card upload-box-card">
+                <div class="upload-progress"><span class="active"></span><span></span><span></span></div>
+                <div class="upload-stage">
+                  <div class="cloud-icon">↑</div>
+                  <h2>Drop your handwriting image here</h2>
+                  <p>or click below to choose a file from your device</p>
+                  <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg,image/webp" hidden />
+                  <button class="btn btn-emerald" id="browseUploadBtn">Choose image</button>
+                  <span class="file-rule">JPG, JPEG, PNG or WebP • max 5 MB</span>
+                </div>
+
+                <div class="upload-preview-panel hidden" id="uploadPreviewPanel">
+                  <div class="preview-img-wrap"><img id="appPreviewImage" alt="Selected handwriting" /></div>
+                  <div class="preview-file-row">
+                    <div><strong id="appFileName">image.jpg</strong><span id="appFileSize">0 KB</span></div>
+                    <button type="button" class="text-link danger-link" id="removeAppFile">Remove</button>
+                  </div>
+                </div>
+
+                <button type="button" class="btn btn-emerald btn-full upload-analyze-btn" id="appAnalyzeBtn" disabled>
+                  Analyze handwriting <span>→</span>
+                </button>
+              </article>
+
+              <aside class="dashboard-card checklist-card">
+                <span class="eyebrow">BEFORE YOU UPLOAD</span>
+                <h3>For a cleaner result</h3>
+                <div class="check-row"><span>✓</span><div><strong>Use good lighting</strong><p>Avoid very dark or blurry photos.</p></div></div>
+                <div class="check-row"><span>✓</span><div><strong>Keep writing visible</strong><p>Try not to crop away important strokes.</p></div></div>
+                <div class="check-row"><span>✓</span><div><strong>Prefer plain backgrounds</strong><p>Paper should be easy to distinguish.</p></div></div>
+                <div class="check-row"><span>✓</span><div><strong>One sample at a time</strong><p>This makes your saved reports easier to compare.</p></div></div>
+                <div class="prototype-callout"><strong>Prototype note</strong><p>The screening result is only as useful as the quality and relevance of the trained model and input data.</p></div>
+              </aside>
+            </div>
+          </div>
+
+          <!-- REPORTS VIEW -->
+          <div class="view hidden" id="view-reports">
+            <div class="page-title-row">
+              <div><span class="eyebrow">REPORT LIBRARY</span><h1>Your reports</h1><p>Saved screening results from this prototype.</p></div>
+              <button class="btn btn-emerald" data-view="upload">+ New analysis</button>
+            </div>
+            <div class="reports-toolbar"><input id="reportSearch" type="text" placeholder="Search report name..." /><select id="reportFilter"><option value="all">All results</option><option value="normal">Normal</option><option value="reversal">Reversal</option><option value="corrected">Corrected</option></select></div>
+
+            <!-- Recent analysis activity -->
+            <article class="report-analytics-card dashboard-card">
+              <div class="card-title-row">
+                <div>
+                  <span class="eyebrow">ANALYSIS ACTIVITY</span>
+                  <h3>Recent screening activity</h3>
+                </div>
+                <span class="analytics-total"><strong id="reportsActivityTotal">12</strong> analyses</span>
+              </div>
+
+              <div class="reports-bar-chart" id="reportsBarChart" aria-label="Recent analysis activity bar chart"></div>
+            </article>
+
+            <div class="report-table-wrap">
+              <table class="report-table">
+                <thead><tr><th>Report</th><th>Date</th><th>Prediction</th><th>Confidence</th><th></th></tr></thead>
+                <tbody id="reportsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ABOUT VIEW -->
+          <div class="view hidden" id="view-about">
+            <div class="page-title-row"><div><span class="eyebrow">ABOUT</span><h1>About DyslexiaLens</h1><p>What the website is designed to do.</p></div></div>
+            <div class="about-grid">
+              <article class="dashboard-card about-main">
+                <div class="about-emblem">D</div>
+                <span class="eyebrow">THE IDEA</span>
+                <h2>Make handwriting analysis easier to understand.</h2>
+                <p>
+                  DyslexiaLens is a project prototype for handwriting-based dyslexia screening.
+                  The interface is built to make the machine-learning pipeline understandable:
+                  a handwriting image can be uploaded, analyzed by the backend model, and
+                  returned as a structured report.
+                </p>
+                <p>
+                  Depending on the final backend, the pipeline may use image preprocessing,
+                  MobileNetV2/CNN-based feature extraction, a feature vector, SVM classification,
+                  and Grad-CAM-style visual explanation.
+                </p>
+              </article>
+              <div class="about-side">
+                <article class="dashboard-card about-card"><span>01</span><h3>Upload</h3><p>Select a handwriting sample from your device.</p></article>
+                <article class="dashboard-card about-card"><span>02</span><h3>Analyze</h3><p>Send the image to your FastAPI + ML pipeline.</p></article>
+                <article class="dashboard-card about-card"><span>03</span><h3>Report</h3><p>Display prediction, confidence and supporting visual details.</p></article>
+              </div>
+            </div>
+            <div class="notice-box"><strong>Important</strong><p>This is a preliminary screening prototype. It should not be presented as a medical diagnosis or as a replacement for a qualified assessment.</p></div>
+          </div>
+          <!-- SETTINGS VIEW -->
+          <div class="view hidden" id="view-settings">
+            <div class="page-title-row">
+              <div>
+                <span class="eyebrow">PREFERENCES</span>
+                <h1>Settings</h1>
+                <p>Customize the appearance of your DyslexiaLens workspace.</p>
+              </div>
+            </div>
+
+            <div class="settings-grid settings-grid-simple">
+
+              <article class="dashboard-card settings-card appearance-card">
+                <div class="settings-head">
+                  <div>
+                    <span class="eyebrow">APPEARANCE</span>
+                    <h3>Light or dark mode</h3>
+                    <p>Choose the visual theme for your dashboard and reports.</p>
+                  </div>
+                </div>
+
+                <div class="theme-choice-row">
+
+                  <button class="theme-choice active" id="lightThemeChoice" type="button">
+                    <div class="theme-preview light-preview">
+                      <div class="theme-preview-top"></div>
+                      <div class="theme-preview-body">
+                        <span></span><span></span><span></span>
+                      </div>
+                    </div>
+                    <div class="theme-choice-text">
+                      <strong>Light mode</strong>
+                      <span>Clean and bright</span>
+                    </div>
+                    <span class="theme-check" id="lightThemeCheck">✓</span>
+                  </button>
+
+                  <button class="theme-choice" id="darkThemeChoice" type="button">
+                    <div class="theme-preview dark-preview">
+                      <div class="theme-preview-top"></div>
+                      <div class="theme-preview-body">
+                        <span></span><span></span><span></span>
+                      </div>
+                    </div>
+                    <div class="theme-choice-text">
+                      <strong>Dark mode</strong>
+                      <span>Comfortable in low light</span>
+                    </div>
+                    <span class="theme-check" id="darkThemeCheck">✓</span>
+                  </button>
+
+                </div>
+
+                <div class="current-theme-status">
+                  <span class="status-dot"></span>
+                  <div>
+                    <strong>Current theme</strong>
+                    <span id="currentThemeLabel">Light mode</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="dashboard-card settings-card">
+                <div class="settings-head">
+                  <div>
+                    <span class="eyebrow">ACCOUNT</span>
+                    <h3>Your profile</h3>
+                    <p>Profile information used across your workspace.</p>
+                  </div>
+                </div>
+
+                <div class="profile-block">
+                  <div class="avatar avatar-large" id="settingsAvatar">S</div>
+                  <div>
+                    <strong id="settingsName">Santhosh Kumar</strong>
+                    <span id="settingsEmail">you@example.com</span>
+                    <span id="settingsPhone">Add a phone number</span>
+                  </div>
+                </div>
+
+                <button class="btn btn-soft btn-full" id="editProfileBtn">
+                  Edit profile
+                </button>
+              </article>
+
+            </div>
+          </div>
+
+        </main>
+      </div>
+    </section>
+
+
+    <!-- EDIT PROFILE MODAL -->
+    <div class="modal-overlay hidden" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+      <div class="profile-modal-card">
+        <div class="modal-heading">
+          <div>
+            <span class="eyebrow">PROFILE</span>
+            <h2 id="profileModalTitle">Edit profile</h2>
+            <p>Update your contact details or change your password.</p>
+          </div>
+          <button class="modal-close" id="closeProfileModal" type="button" aria-label="Close">×</button>
+        </div>
+
+        <form id="profileForm" class="profile-form" onsubmit="event.preventDefault();">
+          <div class="profile-form-grid">
+            <div>
+              <label for="profileFirstName">First name</label>
+              <input id="profileFirstName" type="text" required />
+            </div>
+            <div>
+              <label for="profileLastName">Last name</label>
+              <input id="profileLastName" type="text" required />
+            </div>
+          </div>
+
+          <label for="profileEmail">Email address</label>
+          <input id="profileEmail" type="email" required />
+
+          <label for="profilePhone">Phone number</label>
+          <input id="profilePhone" type="tel" inputmode="tel" placeholder="+91 98765 43210" />
+
+          <div class="password-change-section">
+            <div class="password-section-title">
+              <h3>Change password</h3>
+              <p>In this standalone frontend, password validation is local only. Your friend can connect the real password-change API later.</p>
+            </div>
+
+            <label for="currentPassword">Current password</label>
+            <div class="password-wrap">
+              <input id="currentPassword" type="password" placeholder="Current password" />
+              <button class="show-pass" type="button" data-target="currentPassword">Show</button>
+            </div>
+
+            <label for="newPassword">New password</label>
+            <div class="password-wrap">
+              <input id="newPassword" type="password" minlength="4" placeholder="New password" />
+              <button class="show-pass" type="button" data-target="newPassword">Show</button>
+            </div>
+
+            <label for="confirmPassword">Confirm new password</label>
+            <div class="password-wrap">
+              <input id="confirmPassword" type="password" minlength="4" placeholder="Confirm new password" />
+              <button class="show-pass" type="button" data-target="confirmPassword">Show</button>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn btn-soft" id="cancelProfileEdit" type="button">Cancel</button>
+            <button class="btn btn-emerald" type="submit">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- RESULT PAGE / OVERLAY -->
+    <!-- ==============================
+     FINAL RESULT / REPORT PAGE
+     ============================== -->
+<section class="result-page hidden" id="resultPage">
+
+  <!-- Report Header -->
+  <header class="result-header">
+    <div class="result-header-left">
+      <button class="icon-btn" id="backToDashboard">←</button>
+
+      <div>
+        <span class="eyebrow">ANALYSIS REPORT</span>
+        <h2>Handwriting Screening Report</h2>
+      </div>
+    </div>
+
+    <div class="result-header-right">
+      <button class="btn btn-soft" id="printReport">
+        Print Report
+      </button>
+
+      <button class="btn btn-emerald" id="saveReport">
+        Save Report
+      </button>
+    </div>
+  </header>
+
+
+  <main class="final-report-content">
+
+    <!-- =================================
+         1. ANALYSIS CONFIRMATION
+         ================================= -->
+    <div class="analysis-confirmation">
+
+      <div class="confirmation-left">
+        <div class="confirmation-check">
+          ✓
+        </div>
+
+        <div>
+          <h3>Analysis Complete!</h3>
+
+          <p>
+            Your handwriting has been successfully analyzed
+            using our AI model.
+          </p>
+        </div>
+      </div>
+
+      <div class="analysis-time">
+        <span>◷</span>
+        <div>
+          <small>Processing time</small>
+          <strong id="summaryTime">2.4 sec</strong>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- =================================
+         2 + 3 + 4
+         IMAGE + PREDICTION + CONFIDENCE
+         ================================= -->
+    <div class="top-report-grid">
+
+      <!-- Uploaded Handwriting -->
+      <article class="final-report-card uploaded-card">
+
+        <div class="final-card-heading">
+          <div>
+            <span class="card-icon-small">▧</span>
+            <strong>Uploaded Handwriting</strong>
+          </div>
+        </div>
+
+        <div class="final-image-container">
+          <img
+            id="resultSampleImage"
+            alt="Uploaded handwriting"
+          />
+        </div>
+
+        <div class="sample-file-name">
+          <span>Image</span>
+          <strong id="summaryFile">sample.jpg</strong>
+        </div>
+
+      </article>
+
+
+      <!-- Screening Result -->
+      <article class="final-report-card screening-card">
+
+        <div class="final-card-heading">
+          <div>
+            <span class="card-icon-small">▥</span>
+            <strong>Screening Result</strong>
+          </div>
+
+          <span class="screening-label">
+            Preliminary
+          </span>
+        </div>
+
+        <div class="screening-result-box">
+
+          <div class="result-warning-icon" id="summaryIcon">
+            !
+          </div>
+
+          <div class="prediction-content">
+
+            <h2 id="summaryPrediction">
+              Possible Dyslexia-Related Pattern
+            </h2>
+
+            <p id="summaryDescription">
+              The model has identified handwriting features
+              associated with dyslexia-related reading and
+              writing difficulties.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- Confidence -->
+        <div class="confidence-section">
+
+          <div class="confidence-label-row">
+
+            <strong>
+              Model Confidence
+            </strong>
+
+            <strong id="summaryConfidence">
+              87%
+            </strong>
+
+          </div>
+
+          <div class="final-confidence-bar">
+            <span id="summaryConfidenceBar"></span>
+          </div>
+
+          <div class="class-probability-grid" aria-label="Class probability breakdown">
+            <div class="class-probability-row">
+              <div><span>Normal</span><strong id="probNormal">—</strong></div>
+              <div class="probability-track"><span id="probNormalBar"></span></div>
+            </div>
+            <div class="class-probability-row">
+              <div><span>Reversal</span><strong id="probReversal">—</strong></div>
+              <div class="probability-track"><span id="probReversalBar"></span></div>
+            </div>
+            <div class="class-probability-row">
+              <div><span>Corrected</span><strong id="probCorrected">—</strong></div>
+              <div class="probability-track"><span id="probCorrectedBar"></span></div>
+            </div>
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+
+
+    <!-- =================================
+         RECOMMENDED ACTIVITIES
+         ================================= -->
+    <!-- =================================
+         WHAT THE MODEL LOOKED AT
+         ================================= -->
+    <section class="model-insights-section">
+
+      <div class="report-section-heading">
+        <div>
+          <span class="eyebrow">FEATURE SUMMARY</span>
+          <h2>What the model looked at</h2>
+          <p>
+            The supplied backend preprocesses the image to 32×32 grayscale, extracts a 128-dimensional
+            feature vector with the saved CNN extractor, then sends that vector through
+            StandardScaler + LinearSVC. The API does not return human-readable measurements
+            such as slant or spacing.
+          </p>
+        </div>
+
+        <span class="illustrative-label">Illustrative</span>
+      </div>
+
+      <div class="model-feature-grid">
+
+        <article class="model-feature-card">
+          <div class="model-feature-icon">32</div>
+          <div><h3>Input</h3><p>FastAPI preprocessing creates a 32×32 grayscale normalized image.</p></div>
+          <span class="feature-level low">32×32</span>
+        </article>
+
+        <article class="model-feature-card">
+          <div class="model-feature-icon">CNN</div>
+          <div><h3>CNN Features</h3><p>The trained CNN is used as the feature extractor.</p></div>
+          <span class="feature-level medium">Learned</span>
+        </article>
+
+        <article class="model-feature-card">
+          <div class="model-feature-icon">128</div>
+          <div><h3>Feature Vector</h3><p>The saved extractor produces a 128-dimensional representation.</p></div>
+          <span class="feature-level low">128-D</span>
+        </article>
+
+        <article class="model-feature-card">
+          <div class="model-feature-icon">S</div>
+          <div><h3>SVM</h3><p>StandardScaler followed by LinearSVC performs classification.</p></div>
+          <span class="feature-level medium">LinearSVC</span>
+        </article>
+
+        <article class="model-feature-card">
+          <div class="model-feature-icon">3</div>
+          <div><h3>Output</h3><p>The API returns Normal, Reversal and Corrected probabilities.</p></div>
+          <span class="feature-level low">3 classes</span>
+        </article>
+
+      </div>    </section>
+
+
+    <!-- =================================
+         ATTENTION / GRAD-CAM
+         ================================= -->
+    <section class="gradcam-section">
+
+      <div class="report-section-heading">
+        <div>
+          <span class="eyebrow">VISUAL EXPLANATION</span>
+          <h2>Attention / Grad-CAM area</h2>
+          <p>
+            The supplied FastAPI <code>/predict</code> response does not return a Grad-CAM image.
+            This area is intentionally kept ready for the real heatmap when that
+            endpoint is added to the backend.
+          </p>
+        </div>
+
+        <span class="illustrative-label">Placeholder</span>
+      </div>
+
+      <div class="gradcam-content">
+
+        <div class="gradcam-visual">
+          <div class="grad-paper">
+            <div class="heat-circle heat-one"></div>
+            <div class="heat-circle heat-two"></div>
+            <div class="heat-circle heat-three"></div>
+            <div class="heat-stroke stroke-one"></div>
+            <div class="heat-stroke stroke-two"></div>
+            <span>attention regions</span>
+          </div>
+        </div>
+
+        <div class="gradcam-explanation">
+          <div class="gradcam-icon">⌁</div>
+          <h3>Where the model is focusing</h3>
+          <p>
+            Grad-CAM can be used to highlight regions that contribute
+            strongly to the prediction. When your backend is ready,
+            replace this placeholder with the actual generated heatmap.
+          </p>
+
+          <div class="gradcam-legend">
+            <span><i class="legend-warm"></i> Higher attention</span>
+            <span><i class="legend-soft"></i> Lower attention</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =================================
+         RECOMMENDED ACTIVITIES
+         ================================= -->
+    <section class="recommended-section hidden" id="recommendedActivities">
+
+      <div class="recommended-heading">
+
+        <div class="recommended-title">
+
+          <div class="book-icon">
+            ▮▮
+          </div>
+
+          <div>
+            <h2>Recommended Activities</h2>
+
+            <p>
+              These activities are designed to support reading,
+              writing and language skills.
+              You can try them regularly to strengthen the
+              areas that may be challenging.
+            </p>
+          </div>
+
+        </div>
+
+        <button class="activity-view-btn">
+          View all Activities →
+        </button>
+
+      </div>
+
+
+      <!-- Activity Cards -->
+      <div class="recommended-grid">
+
+        <!-- 1 -->
+        <article class="recommended-card activity-pink">
+
+          <div class="activity-icon">
+            <span>A</span>
+            <span>B</span>
+            <span>C</span>
+          </div>
+
+          <div>
+            <h3>
+              Phonics Practice
+            </h3>
+
+            <p>
+              Work on letter-sound connections
+              using simple words and sounds.
+            </p>
+          </div>
+
+        </article>
+
+
+        <!-- 2 -->
+        <article class="recommended-card activity-blue">
+
+          <div class="activity-icon ear-icon">
+            ◉
+          </div>
+
+          <div>
+            <h3>
+              Phonemic Awareness
+            </h3>
+
+            <p>
+              Try activities like clapping or tapping
+              sounds in words and breaking words
+              into syllables.
+            </p>
+          </div>
+
+        </article>
+
+
+        <!-- 3 -->
+        <article class="recommended-card activity-green">
+
+          <div class="activity-icon">
+            ✣
+          </div>
+
+          <div>
+            <h3>
+              Word Building
+            </h3>
+
+            <p>
+              Use letter tiles or flashcards
+              to build and spell words.
+            </p>
+          </div>
+
+        </article>
+
+
+        <!-- 4 -->
+        <article class="recommended-card activity-yellow">
+
+          <div class="activity-icon">
+            ▮
+          </div>
+
+          <div>
+            <h3>
+              Guided Reading
+            </h3>
+
+            <p>
+              Read short, structured texts
+              regularly to improve reading fluency.
+            </p>
+          </div>
+
+        </article>
+
+
+        <!-- 5 -->
+        <article class="recommended-card activity-purple">
+
+          <div class="activity-icon">
+            ✎
+          </div>
+
+          <div>
+            <h3>
+              Handwriting Practice
+            </h3>
+
+            <p>
+              Practice writing letters and words slowly
+              while saying the sounds aloud.
+            </p>
+          </div>
+
+        </article>
+
+
+        <!-- 6 -->
+        <article class="recommended-card activity-cyan">
+
+          <div class="activity-icon">
+            ↻
+          </div>
+
+          <div>
+            <h3>
+              Repeated Reading
+            </h3>
+
+            <p>
+              Read the same text multiple times
+              to build speed and confidence.
+            </p>
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================
+         IMPORTANT NOTICE
+         ================================= -->
+    <section class="final-important-notice">
+
+      <div class="important-icon">
+        !
+      </div>
+
+      <div class="important-text">
+
+        <h2>
+          Important Notice
+        </h2>
+
+        <p>
+          This tool is intended for preliminary screening
+          and educational support only. It does not provide
+          a medical diagnosis.
+        </p>
+
+        <p>
+          If dyslexia is suspected, please consult a qualified
+          healthcare or educational professional for a
+          comprehensive assessment and appropriate guidance.
+        </p>
+
+      </div>
+
+      <button
+        class="specialist-button"
+        id="specialistButton"
+      >
+        <span>♧</span>
+        Find a Specialist
+      </button>
+
+    </section>
+
+
+    <!-- =================================
+         FOOTER MESSAGE
+         ================================= -->
+    <div class="report-footer-message">
+
+      <span>
+        Everyone learns differently.
+      </span>
+
+      <strong>
+        Support today builds brighter tomorrows.
+      </strong>
+
+    </div>
+
+  </main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+</section>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

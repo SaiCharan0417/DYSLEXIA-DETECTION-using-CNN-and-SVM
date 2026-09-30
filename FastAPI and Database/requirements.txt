@@ -7,3 +7,4 @@ joblib
 numpy
 Pillow
 mysql-connector-python
+supabase
